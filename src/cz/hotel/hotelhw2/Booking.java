@@ -5,27 +5,35 @@ import java.util.ArrayList;
 import java.util.List;
 import cz.hotel.hotelhw2.Guest;
 import cz.hotel.hotelhw2.Room;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Booking {
     private Guest guest;
     private Room room;
-    private List <Guest>otherGuests = new ArrayList<>();
+    private List <Guest>guestsInRoom = new ArrayList<>();
     private LocalDate arrival;
     private LocalDate departure;
     private TypeOfVacation typeOfVacation;
+    private String stringListOfGuestInRoom ="";
+    private DateTimeFormatter formatCzDateBooking = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //nastavení formatu datumu
 
     private static final int ONE_WEEK_ACCOMMODATION = 7;
 
     //region constructors
-    //variata pro jednoho hosta
-    public Booking(Guest guest, Room room, LocalDate arrival, LocalDate departure, TypeOfVacation typeOfVacation) {
-        this.guest = guest;
+    public Booking(Room room, Guest guest, LocalDate arrival, LocalDate departure, TypeOfVacation typeOfVacation) {
         this.room = room;
+        this.guest = guest;
+        this.guestsInRoom.add(guest);
         this.arrival = arrival;
         this.departure = departure;
         this.typeOfVacation = typeOfVacation;
     }
-    //end region constructors
+
+    public Booking(Room room,Guest guest, LocalDate arrival, TypeOfVacation typeOfVacation) {
+        this(room, guest,arrival,arrival.plusDays(ONE_WEEK_ACCOMMODATION),typeOfVacation);
+    }
+    //endregion constructors
 
     //region gettery a settery
 
@@ -45,12 +53,35 @@ public class Booking {
         this.room = room;
     }
 
-    public List<Guest> getOtherGuests() {
-        return otherGuests;
+    public List<Guest> getGuestsInRoom() {
+        return guestsInRoom;
     }
 
-    public void addOtherGuests(List<Guest> otherGuests) {
-        this.otherGuests = otherGuests;
+    public int getNumberOfGuestsInRoom() {
+        return guestsInRoom.size();
+    }
+
+    public void addGuest(Guest guest) {
+        this.guestsInRoom.add(guest);
+    }
+
+    public void setGuestsInRoom(List<Guest> guestsInRoom) {
+        this.guestsInRoom = guestsInRoom;
+    }
+    public String createListOfGuestInRoom(){
+        for (Guest guest:guestsInRoom){
+            stringListOfGuestInRoom=stringListOfGuestInRoom+guest.getName()+" " + guest.getSurname()+", ";
+        }
+        return stringListOfGuestInRoom;
+    }
+
+    public String getDescription(){
+        return "---------"+"\n"+
+                "Rezervace pokoje č."+this.room.getRoomNumber()+"\n"
+                +"Od: "+this.getArrival().format(formatCzDateBooking)+"\n"
+                +"Do: "+this.getDeparture().format(formatCzDateBooking)+"\n"
+                +"Ubytován/i: "+this.createListOfGuestInRoom()+"\n"
+                +"Typ pobytu: "+ this.getTypeOfVacation()+"\n";
     }
 
     public LocalDate getArrival() {
@@ -78,7 +109,7 @@ public class Booking {
     }
 
 
-    //end region gettery a settery
+    //endregion gettery a settery
 
     //regin enum
     public enum TypeOfVacation {
