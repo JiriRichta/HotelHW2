@@ -7,11 +7,13 @@ public class Guest {
     private String surname;
     private LocalDate birthDate;
 
+    //region construktors
     public Guest (String name,String surname, LocalDate birthDate){
         this.name = name;
         this.surname = surname;
         this.birthDate = birthDate;
     }
+    //end region construktors
 
     //region gettry a settry
 
