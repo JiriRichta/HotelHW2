@@ -1,5 +1,6 @@
 package cz.hotel.hotelhw2;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,10 @@ public class Booking {
         this.typeOfVacation = typeOfVacation;
     }
 
+    public int getGuestsCount(){
+        return this.guestsInRoom.size();
+    }
+
     public String getDescriptionFormatVelky(){
         return "---------"+"\n"+
                 "Rezervace pokoje č."+this.room.getRoomNumber()+"\n"
@@ -108,6 +113,22 @@ public class Booking {
                 +"Typ pobytu: "+ this.getTypeOfVacation()+"\n";
     }
 
+    public int getBookingLength(){
+        return arrival.until(departure).getDays();
+    }
+
+    public BigDecimal getTotalPrice(){
+        return room.getPricePerNight().multiply(BigDecimal.valueOf(getBookingLength()));
+    }
+    public String getFormattedSummary(){
+        //datumOd až datumDo: jméno hlavního hosta (datum narození)[počet hostů celkem, výhledNaMoře ano/ne] za cena
+        return this.getArrival().format(formatCzDateBooking)+" až "+
+               this.getDeparture().format(formatCzDateBooking) + ": "+
+               this.guest.getName()+" "+this.guest.getSurname() + " ("+
+               this.guest.getBirthDate().format(formatCzDateBooking)+") [celkem hostů v pokoji: "+
+               this.getGuestsCount()+", výhled na moře "+((room.isSeaView())?"ANO":"NE")+"]"+
+               " za "+this.getTotalPrice()+" Kč";
+    }
     @Override
     public String toString(){
         return "Rezervace pokoje č."+this.room.getRoomNumber()+
