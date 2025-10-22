@@ -18,7 +18,7 @@ public class Booking {
     private String stringListOfGuestInRoom ="";
     private DateTimeFormatter formatCzDateBooking = DateTimeFormatter.ofPattern("dd.MM.yyyy"); //nastavení formatu datumu
 
-    private static final int ONE_WEEK_ACCOMMODATION = 7;
+
 
     //region constructors
     public Booking(Room room, Guest guest, LocalDate arrival, LocalDate departure, TypeOfVacation typeOfVacation) {
@@ -31,7 +31,7 @@ public class Booking {
     }
 
     public Booking(Room room,Guest guest, LocalDate arrival, TypeOfVacation typeOfVacation) {
-        this(room, guest,arrival,arrival.plusDays(ONE_WEEK_ACCOMMODATION),typeOfVacation);
+        this(room, guest,arrival,arrival.plusDays(Settings.ONE_WEEK_ACCOMMODATION),typeOfVacation);
     }
     //endregion constructors
 
@@ -75,15 +75,6 @@ public class Booking {
         return stringListOfGuestInRoom;
     }
 
-    public String getDescription(){
-        return "---------"+"\n"+
-                "Rezervace pokoje č."+this.room.getRoomNumber()+"\n"
-                +"Od: "+this.getArrival().format(formatCzDateBooking)+"\n"
-                +"Do: "+this.getDeparture().format(formatCzDateBooking)+"\n"
-                +"Ubytován/i: "+this.createListOfGuestInRoom()+"\n"
-                +"Typ pobytu: "+ this.getTypeOfVacation()+"\n";
-    }
-
     public LocalDate getArrival() {
         return arrival;
     }
@@ -106,6 +97,24 @@ public class Booking {
 
     public void setTypeOfVacation(TypeOfVacation typeOfVacation) {
         this.typeOfVacation = typeOfVacation;
+    }
+
+    public String getDescriptionFormatVelky(){
+        return "---------"+"\n"+
+                "Rezervace pokoje č."+this.room.getRoomNumber()+"\n"
+                +"Od: "+this.getArrival().format(formatCzDateBooking)+"\n"
+                +"Do: "+this.getDeparture().format(formatCzDateBooking)+"\n"
+                +"Ubytován/i: "+this.createListOfGuestInRoom()+"\n"
+                +"Typ pobytu: "+ this.getTypeOfVacation()+"\n";
+    }
+
+    @Override
+    public String toString(){
+        return "Rezervace pokoje č."+this.room.getRoomNumber()+
+                " (Od: "+this.getArrival().format(formatCzDateBooking)+
+                " - Do: "+this.getDeparture().format(formatCzDateBooking)+") "+
+                "Ubytován/i: "+this.createListOfGuestInRoom()+
+                " (Typ pobytu: "+ this.getTypeOfVacation()+")";
     }
 
 
